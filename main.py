@@ -1,9 +1,13 @@
-# разбиение числа на два
-def partitioning_number(n):
-    partitions_of_number = []
-    for i in range(2, n // 2 + 1):
-        partitions_of_number.append((i, n - i))
-    return partitions_of_number
+# проверка разбиений числа
+def check_partitions_of_number(n, prime_numbers):
+    index_of_first_addend = 0
+    success = False
+    while prime_numbers[index_of_first_addend] <= n // 2 and not success:
+        # проверка простые ли числа слагаемые
+        if n - prime_numbers[index_of_first_addend] in prime_numbers:
+            success = True
+        index_of_first_addend += 1
+    return success
 
 
 # решето эратосфена
@@ -18,29 +22,14 @@ def sieve_of_eratosthenes(max_n):
     return prime_numbers
 
 
-# проверка если ли один список в другом
-def is_list_in_list(a, b):
-    i = 0
-    while i < len(a) and a[i] in b:
-        i += 1
-    if i == len(a):
-        return True
-    return False
-
-
 def main():
     max_n = 10 ** 5
     prime_numbers = sieve_of_eratosthenes(max_n)
     success = True
     n = 4
     while success and n <= max_n:
-        partitions_of_number = partitioning_number(n)
-        index_of_partition = 0
-        # проверка каждого разбиения
-        while (index_of_partition < len(partitions_of_number) and
-               not is_list_in_list(partitions_of_number[index_of_partition], prime_numbers)):
-            index_of_partition += 1
-        if index_of_partition == len(partitions_of_number):
+        # проверка разбиений числа
+        if not check_partitions_of_number(n, prime_numbers):
             print(f"Число {n} нельзя разложить в виде 2-х простых чисел")
             success = False
         n += 2
